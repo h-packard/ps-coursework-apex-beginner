@@ -1,7 +1,7 @@
 trigger AppleWatch on Opportunity (after insert) {
     for ( Opportunity opp : Trigger.new) {
-        if ( opp > 50000 ) {
-            
+        if ( opp.Amount > 50000 ) {
+
             Task t 			= new Task();
 
             t.Subject 		= 'Apple Watch Promo';
