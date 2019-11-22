@@ -3,7 +3,7 @@ trigger WarrantySummary on Case (before insert) {
         Date purchasedDate = myCase.Product_Purchase_Date__c;
         DateTime createdDate = myCase.CreatedDate;
         Integer warrantyDays = myCase.Product_Total_Warranty_Days__c.intValue();
-        Decimal warrantyPercentage = purchasedDate.daysBetween(Date.today()) / myCase.Product_Total_Warranty_Days__c;
+        Decimal warrantyPercentage = (purchasedDate.daysBetween(Date.today()) / myCase.Product_Total_Warranty_Days__c).setScale(2);
         Boolean hasExtendedWarranty = myCase.Product_Has_Extended_Warranty__c;
 
     myCase.Warranty_Summary__c = 
