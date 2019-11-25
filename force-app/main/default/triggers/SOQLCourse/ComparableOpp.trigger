@@ -5,7 +5,7 @@ trigger ComparableOpp on Opportunity (after insert) {
         Decimal lowerTenPercent = 0.9 * opp.Amount;
         Decimal upperTenPercent = 1.1 * opp.Amount;
         String industry = opp.Account.Industry;
-        Date closeWithinOneYear = opp.CloseDate.addYears(-1);
+        Date withinOneYear = Date.today().addYears(-1);
 
     List<Opportunity> comparableOppList = [SELECT Id, Name, Amount
                                             FROM Opportunity
@@ -13,7 +13,8 @@ trigger ComparableOpp on Opportunity (after insert) {
                                             AND Amount <= :upperTenPercent
                                             AND Account.Industry = :industry
                                             AND StageName = 'Closed Won'
-                                            AND CloseDate > :closeWithinOneYear
+                                            AND CloseDate > :withinOneYear
+                                            AND Owner.Position_Start_Date__c < :withinOneYear
                                             AND Id != :opp.Id];
     if ( !comparableOppList.isEmpty() ) {
         for ( Opportunity compOpp : comparableOppList ) {
