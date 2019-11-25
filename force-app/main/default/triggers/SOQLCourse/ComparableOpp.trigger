@@ -14,7 +14,7 @@ trigger ComparableOpp on Opportunity (after insert) {
                                             AND Account.Industry = :industry
                                             AND StageName = 'Closed Won'
                                             AND CloseDate > :withinOneYear
-                                            AND Owner.Position_Start_Date__c < :withinOneYear
+                                            AND OwnerId.Position_Start_Date__c < :withinOneYear
                                             AND Id != :opp.Id];
     if ( !comparableOppList.isEmpty() ) {
         for ( Opportunity compOpp : comparableOppList ) {

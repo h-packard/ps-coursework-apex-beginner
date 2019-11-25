@@ -3,7 +3,7 @@
      @isTest static void createCaseToday() { 
         Case aCase = new Case();
 
-        aCase.Reason = 'Test Case';
+        aCase.Reason = 'TestCase';
 
         insert aCase;
 
@@ -11,40 +11,35 @@
                          FROM Case
                          WHERE Reason = :aCase.Reason];
 
-        System.assertEquals(findACase.Status, 'New');
+        System.assertEquals('New', findACase.Status);
     }
     
-    @isTest static void moreThanTwoContactsWithCaseToday() { 
+    @isTest static void moreThanTwoCasesOnContactToday() { 
         
         Contact aContact = new Contact();
-        aContact.LastName = 'Test Contact';
+        aContact.LastName = 'TestContact';
         insert aContact;
 
-        Contact findAContact = [SELECT Id
-                                FROM Contact
-                                WHERE LastName = :aContact.LastName];
 
-        Case testContactCaseOne = new Case();
-        testContactCaseOne.Reason = 'Test Contact Case One';
-        testContactCaseOne.ContactId = findAContact.Id;
-        insert testContactCaseOne;        
-        
-        Case testContactCaseTwo = new Case();
-        testContactCaseTwo.Reason = 'Test Contact Case Two';
-        testContactCaseTwo.ContactId = findAContact.Id;
-        insert testContactCaseTwo;
+        List<Case> testCases = new List<Case>();
+        for(Integer i=0; i <4; i++) {
+            Case testCase = new Case();
+            testCase.ContactId = aContact.Id;
+            testCases.add(testCase);        
+        }
+
+        insert testCases;
+
 
         Case aCase = new Case();
-        aCase.Reason = 'Test Case';
-        aCase.ContactId = findAContact.Id;
+        aCase.ContactId = aContact.Id;
         insert aCase;
 
         Case findACase = [SELECT Status
                          FROM Case
-                         WHERE Reason = :aCase.Reason];
+                         WHERE Id = :aCase.Id];
 
-
-        System.assertEquals(findACase.Status, 'Closed');    
+        System.assertEquals('Closed', findACase.Status);    
     }     
     
     @isTest static void moreThanThreeAccountsWithCaseToday() { 
@@ -52,35 +47,22 @@
         anAccount.Name = 'Test Account';
         insert anAccount;
 
-        Account findAnAccount = [SELECT Id
-                                FROM Account
-                                WHERE Name = :anAccount.Name];
-
-        Case testAccountCaseOne = new Case();
-        testAccountCaseOne.Reason = 'Test Account Case One';
-        testAccountCaseOne.AccountId = findAnAccount.Id;
-        insert testAccountCaseOne;        
-        
-        Case testAccountCaseTwo = new Case();
-        testAccountCaseTwo.Reason = 'Test Account Case Two';
-        testAccountCaseTwo.AccountId = findAnAccount.Id;
-        insert testAccountCaseTwo;
-
-        Case testAccountCaseThree = new Case();
-        testAccountCaseThree.Reason = 'Test Account Case Three';
-        testAccountCaseThree.AccountId = findAnAccount.Id;
-        insert testAccountCaseThree;
+        List<Case> testCases = new List<Case>();
+        for(Integer i=0; i < 5; i++) {
+            Case testCase = new Case();
+            testCase.AccountId = anAccount.Id;
+            testCases.add(testCase);        
+        }
+        insert testCases;
 
         Case aCase = new Case();
-        aCase.Reason = 'Test Case';
-        aCase.AccountId = findAnAccount.Id;
+        aCase.AccountId = anAccount.Id;
         insert aCase;
 
         Case findACase = [SELECT Status
                          FROM Case
-                         WHERE Reason = :aCase.Reason];
+                         WHERE Id = :aCase.Id];
 
-
-        System.assertEquals(findACase.Status, 'Closed');    
-    }
+        System.assertEquals('Closed', findACase.Status);    
+    }  
 }

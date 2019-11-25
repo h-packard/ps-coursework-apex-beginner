@@ -6,6 +6,7 @@ trigger SetUpOpportunityTeam on Opportunity (after insert) {
         Opportunity oppManager = [SELECT Id, Owner.ManagerId
                                     FROM Opportunity 
                                     WHERE Id = :opp.Id];
+                                    
         if ( oppManager.Owner.ManagerId != null ) {
             OpportunityTeamMember oppMember = new OpportunityTeamMember();
             oppMember.UserId = oppManager.Owner.ManagerId;
